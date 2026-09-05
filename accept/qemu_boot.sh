@@ -14,7 +14,7 @@ fail() {
     exit 1
 }
 
-for command_name in as ld wc tr od sha256sum timeout grep qemu-system-x86_64; do
+for command_name in as ld wc tr od sha256sum timeout grep mktemp qemu-system-x86_64; do
     if ! command -v "$command_name" >/dev/null 2>&1; then
         not_verified "missing_command:$command_name"
     fi
@@ -33,7 +33,7 @@ set +e
 timeout 5s qemu-system-x86_64 \
     -machine pc \
     -m 16M \
-    -drive "file=$image,format=raw,if=ide,readonly=on" \
+    -drive "file=$image,format=raw,if=ide" \
     -boot order=c \
     -display none \
     -serial stdio \
