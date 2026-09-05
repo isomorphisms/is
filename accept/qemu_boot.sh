@@ -24,7 +24,8 @@ if ! image=$(sh "$repo_root/build_image.sh"); then
     fail image_build
 fi
 
-sha_before=$(sha256sum "$image" | awk '{print $1}')
+sha_before=$(sha256sum "$image")
+sha_before=${sha_before%% *}
 log=$(mktemp)
 trap 'rm -f "$log"' EXIT HUP INT TERM
 
@@ -42,7 +43,8 @@ timeout 5s qemu-system-x86_64 \
 qemu_exit=$?
 set -e
 
-sha_after=$(sha256sum "$image" | awk '{print $1}')
+sha_after=$(sha256sum "$image")
+sha_after=${sha_after%% *}
 if [ "$sha_before" != "$sha_after" ]; then
     fail image_changed_during_boot
 fi
